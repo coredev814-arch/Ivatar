@@ -1,5 +1,3 @@
-LICENSE
-README.md
 setup.py
 SMPLicit/SMPL.py
 SMPLicit/SMPLicit.py

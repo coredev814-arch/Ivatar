@@ -114,7 +114,7 @@ class GarmentService:
 
         model_id = garment["model_id"]
 
-        # Get SMPL beta from body measurements using the backend's own service
+        # Get SMPL beta from body measurements
         from .smpl_service import get_smpl_service
         smpl_svc = get_smpl_service()
         measurements = BodyMeasurements(

@@ -70,8 +70,7 @@ class SMPLService:
         if not path.exists():
             raise FileNotFoundError(f"SMPL model not found at {path}")
         model = smplx.create(
-            model_path=str(path.parent),
-            model_type="smpl",
+            model_path=str(path),
             gender=gender,
             num_betas=settings.smpl.num_shape_params,
         )
