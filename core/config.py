@@ -16,17 +16,19 @@ class SMPLConfig(BaseModel):
     num_shape_params: int = 10
 
 
-class SMPLicitConfig(BaseModel):
-    """Configuration for SMPLicit garment model locations."""
+class GarmentBindingConfig(BaseModel):
+    """Configuration for garment binding system."""
 
-    garment_catalog_path: Path = PROJECT_ROOT / "lib" / "fit_SMPLicit" / "garment_catalog.json"
-    checkpoints_path: Path = PROJECT_ROOT / "lib" / "checkpoints"
-    clusters_path: Path = PROJECT_ROOT / "lib" / "clusters"
+    garment_storage_path: Path = PROJECT_ROOT / "garments"
+    binding_cache_path: Path = PROJECT_ROOT / "garment_bindings"
+    max_upload_size_mb: int = 50
+    # I-pose shoulder rotation (radians). Tune to match your garment GLBs.
+    ipose_shoulder_angle: float = 1.13  # ~65 degrees
 
 
 class AppConfig(BaseModel):
     smpl: SMPLConfig = SMPLConfig()
-    smplicit: SMPLicitConfig = SMPLicitConfig()
+    garment: GarmentBindingConfig = GarmentBindingConfig()
 
 
 settings = AppConfig()

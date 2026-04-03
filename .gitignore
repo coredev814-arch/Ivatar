@@ -3,3 +3,6 @@ __pycache__/
 *.pkl
 *.pt
 .ipynb_checkpoints/
+garment_bindings/
+garment_mesh/
+garments/

@@ -44,25 +44,34 @@ class MeshResponse(BaseModel):
     )
 
 
-# ── Garment schemas ──────────────────────────────────────────────────────
+# ── Garment binding schemas ──────────────────────────────────────────────
 
 
-class GarmentInfo(BaseModel):
-    """Summary of a garment in the catalog."""
-    id: str = Field(..., description="Unique garment identifier")
-    source_image: str = Field(..., description="Source image the garment was fitted from")
-    cloth_name: str = Field(..., description="Garment type: tshirt, coat, pants, skirt, shoe, hair")
-    model_id: int = Field(..., description="SMPLicit model index: 0=upper, 1=pants, 2=skirts, 3=hair, 4=shoes")
+class GarmentCategory(str, Enum):
+    shirt = "shirt"
+    pants = "pants"
 
 
-class GarmentListResponse(BaseModel):
-    """Response for listing all available garments."""
-    garments: List[GarmentInfo]
+class GarmentUploadResponse(BaseModel):
+    garment_id: str
+    filename: str
+    category: GarmentCategory
+    vertex_count: int
+    face_count: int
 
 
-class GarmentMeshRequest(BaseModel):
-    """Request to generate a garment mesh on a specific body with size control."""
-    garment_id: str = Field(..., description="ID of the garment from the catalog")
+class GarmentBindingRequest(BaseModel):
+    sex: Sex = Field(..., description="Sex for SMPL model used in binding")
+
+
+class GarmentBindingResponse(BaseModel):
+    garment_id: str
+    num_bindings: int
+    status: str
+
+
+class GarmentDeformRequest(BaseModel):
+    garment_id: str = Field(..., description="ID of the garment to deform")
     sex: Sex = Field(..., description="Biological sex for SMPL model variant")
     height_cm: float = Field(..., gt=0)
     weight_kg: float = Field(..., gt=0)
@@ -72,23 +81,32 @@ class GarmentMeshRequest(BaseModel):
     bicep_cm: float = Field(..., gt=0)
     arm_length_cm: float = Field(..., gt=0)
     leg_length_cm: float = Field(..., gt=0)
-    size_offset: float = Field(
-        0.0,
-        ge=-2.0,
+    size_factor: float = Field(
+        1.0,
+        ge=0.5,
         le=2.0,
-        description="Garment size adjustment. 0=as-fitted, negative=tighter, positive=looser",
+        description="Garment size multiplier. 1.0=as-designed, <1=tighter, >1=looser",
     )
 
 
-class GarmentMeshResponse(BaseModel):
-    """Response containing the garment mesh."""
+class GarmentDeformResponse(BaseModel):
     vertices: List[float] = Field(
-        ..., description="Flattened [x0,y0,z0,x1,y1,z1,...] garment vertex positions"
+        ..., description="Flattened [x0,y0,z0,...] garment vertex positions"
     )
     faces: List[int] = Field(
-        ..., description="Flattened [i0,i1,i2,i3,i4,i5,...] triangle indices"
+        ..., description="Flattened [i0,i1,i2,...] triangle indices"
     )
     garment_id: str
-    cloth_name: str
-    size_offset: float
+    size_factor: float
+
+
+class GarmentCatalogEntry(BaseModel):
+    garment_id: str
+    filename: str
+    category: GarmentCategory
+    has_binding: bool
+
+
+class GarmentCatalogResponse(BaseModel):
+    garments: List[GarmentCatalogEntry]
 

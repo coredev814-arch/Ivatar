@@ -102,6 +102,7 @@ pytz==2025.2
 pywavelets==1.8.0
 requests==2.31.0
 rich==14.2.0
+rtree==1.4.0
 scikit-image==0.25.2
 scipy==1.15.3
 shellingham==1.5.4
