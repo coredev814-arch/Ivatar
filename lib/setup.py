@@ -1,3 +1,4 @@
+import os
 from setuptools import find_packages, setup
 import warnings
 
@@ -18,8 +19,12 @@ def check_dependencies():
             'https://github.com/enriccorona/SMPLicit/'.format(
                 missing_dependencies))
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+readme_path = os.path.join(os.path.dirname(__file__), "README.md")
+if os.path.exists(readme_path):
+    with open(readme_path, "r") as fh:
+        long_description = fh.read()
+else:
+    long_description = ""
 
 check_dependencies()
 

@@ -55,10 +55,14 @@ class GarmentService:
     def _load_smplicit(self) -> None:
         """Load the SMPLicit layer for garment reconstruction."""
         try:
+            import warnings
             import SMPLicit as smplicit_pkg
-            self._smplicit_layer = smplicit_pkg.SMPLicit()
-            if torch.cuda.is_available():
-                self._smplicit_layer = self._smplicit_layer.cuda()
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*CUDA initialization.*")
+                warnings.filterwarnings("ignore", message=".*weight_norm.*")
+                self._smplicit_layer = smplicit_pkg.SMPLicit()
+                if torch.cuda.is_available():
+                    self._smplicit_layer = self._smplicit_layer.cuda()
             logger.info("SMPLicit layer loaded successfully")
         except Exception as e:
             logger.error("Failed to load SMPLicit: %s", e)
